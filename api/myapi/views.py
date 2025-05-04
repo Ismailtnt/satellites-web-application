@@ -22,8 +22,8 @@ def subsystem_files(request, sat_id, sub_id):
 @api_view(['GET'])
 def file_metadata(request, sat_id, sub_id, file_id):
     satellite = SatFiles.objects.filter(id=sat_id, subsystem_id=sub_id)
-    file_metadata = DbFiles.objects.filter(sat_file_id=file_id, file_ver=satellite.cur_file_ver)
-    serializer = DbFilesSerializer(file_metadata)
+    file_metad = DbFiles.objects.filter(sat_file_id=file_id, file_ver=satellite.cur_file_ver)
+    serializer = DbFilesSerializer(file_metad)
     return Response(serializer.data)
 
 @api_view(['GET'])
