@@ -1,7 +1,6 @@
 # 📡 Satellites Web Application – Documentation
 
 ## 📝 Description
-
 This project is a full-stack web application for **satellite data communication**, allowing visualization, versioning, and download of satellite-generated files. It integrates a **React frontend**, a **Django REST API**, and a **PostgreSQL database**.
 
 ---
@@ -158,6 +157,14 @@ export const getFiles = (satId, subId) => api.get(`satellites/${satId}/subsystem
 ```
 
 ---
+
+## 🧪 Demo App !
+
+![Satellites](https://github.com/assets/sats.jpg)
+
+![Subsystems](https://github.com/assets/subs.jpg)
+
+![File versions](https://github.com/assets/fileVersions.jpg)
 
 ## 👨‍💻 Author
 
