@@ -1,70 +1,165 @@
-# Getting Started with Create React App
-Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# 📡 Satellites Web Application – Documentation
 
-## Available Scripts
+## 📝 Description
 
-In the project directory, you can run:
+This project is a full-stack web application for **satellite data communication**, allowing visualization, versioning, and download of satellite-generated files. It integrates a **React frontend**, a **Django REST API**, and a **PostgreSQL database**.
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## 🧩 Architecture Overview
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+* **Frontend**: React.js (SPA & multipage variants)
+* **Backend**: Django REST Framework
+* **Database**: PostgreSQL (UMS-EOSAT schema)
+* **Communication**: HTTP/JSON (Axios)
 
-### `npm test`
+```text
+User ⇄ React Frontend ⇄ Django API ⇄ PostgreSQL DB
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+## 🎯 Project Objectives
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+* Manage satellite file metadata and versions
+* Communicate with a PostgreSQL database with multiple schemas
+* Allow downloading and consulting satellite subsystem files
+* Display file metadata and support multiple formats (CSV, JSON, binary)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 🗃️ Database Design (PostgreSQL)
 
-### `npm run eject`
+Follows the **UMS-EOSAT schema**, including:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### 🧱 Tables:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+* `sat_files`: Tracks files by subsystem
+* `db_files`: File version metadata (hash, signature, type, size, etc.)
+* `download_entries_archive`: Archives of downloaded file chunks
+* `download_gaps`: Tracks missing file chunks (gaps)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### 🔄 Challenges:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+* Managing multiple schemas (`UM5-EOSAT`, `MOHAMMEDIA-SAT`)
+* Raw SQL queries for dynamic schema access
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## ⚙️ Backend (Django)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### 🔨 Setup:
 
-### Code Splitting
+* Python, Django, psycopg2
+* Models generated with `inspectdb`
+* REST API with Django REST Framework
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### 🔧 Key Files:
 
-### Analyzing the Bundle Size
+* `models.py`: Reflects PostgreSQL structure
+* `views.py`: Custom views with raw SQL for dynamic schema access
+* `serializers.py`: Translates models ⇄ JSON
+* `urls.py`: Routes for API endpoints
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### 📡 Notable API Endpoints:
 
-### Making a Progressive Web App
+```
+GET /api/satellites
+GET /api/satellites/<sat_id>/subsystems
+GET /api/satellites/<sat_id>/subsystems/<sub_id>/files/
+GET /api/satellites/<sat_id>/subsystems/<sub_id>/files/<file_id>/download/
+GET /api/satellites/<sat_id>/fig/
+GET /api/satellites/<sat_id>/logs/
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+---
 
-### Advanced Configuration
+## 💻 Frontend (React)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### 🧱 Structure:
 
-### Deployment
+* `src/api/`: Axios API client (`apiService.js`)
+* `src/pages/`: UI Pages (Dashboard, Files, Subsystems, FileViewer)
+* `SatelliteDashboard`: Main component managing state and display
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+### 🎨 UI Features:
 
-### `npm run build` fails to minify
+* Tailwind CSS
+* Dynamic tables, dropdowns, download buttons
+* Progress bars, error handling
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### 🔗 Communication:
+
+Axios calls to Django backend using `apiService.js`.
+
+---
+
+## 🧠 One-Page Version
+
+Also includes a **SPA dashboard** version:
+
+* File: `SatelliteDashboard.js`
+* Uses React hooks (`useState`, `useEffect`)
+* Features:
+
+  * Satellite selection
+  * Subsystem file listing
+  * Version & metadata viewing
+  * Downloading files
+
+---
+
+## 🚧 Development Challenges
+
+* PostgreSQL multi-schema access
+* Parsing of multi-format files (CSV, JSON, PNG, JPG)
+* Column name inconsistencies in legacy schema
+* Manual use of raw SQL and view materialization
+
+---
+
+## 🛠️ Setup Instructions
+
+### 🔁 Backend (Django)
+
+```bash
+cd backend/
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+psql -U postgres -d postgres -f createdatabase.sql
+python manage.py makemigrations
+python manage.py migrate
+python manage.py runserver
+```
+
+### ⚛️ Frontend (React)
+
+```bash
+cd frontend/
+npm install
+npm start
+```
+
+---
+
+## 🧪 Sample API Usage
+
+```js
+import axios from 'axios';
+
+const api = axios.create({
+  baseURL: 'http://localhost:8000/api/',
+});
+
+export const getSatellites = () => api.get('satellites/');
+export const getSubsystems = (satId) => api.get(`satellites/${satId}/subsystems/`);
+export const getFiles = (satId, subId) => api.get(`satellites/${satId}/subsystems/${subId}/files/`);
+```
+
+---
+
+## 👨‍💻 Author
+
+* Ismail AIT MOUMAD
+Email: ismailaitmoumad1@gmail.com
