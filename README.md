@@ -160,11 +160,11 @@ export const getFiles = (satId, subId) => api.get(`satellites/${satId}/subsystem
 
 ## 🧪 Demo App !
 
-![Satellites](https://github.com/Ismailtnt/satellites-web-application/assets/sats.jpg)
+![Satellites](https://github.com/Ismailtnt/satellites-web-application/tree/master/assets/sats.jpg)
 
-![Subsystems](https://github.com/Ismailtnt/satellites-web-application/assets/subs.jpg)
+![Subsystems](https://github.com/Ismailtnt/satellites-web-application/tree/master/assets/subs.jpg)
 
-![File versions](https://github.com/Ismailtnt/satellites-web-application/assets/fileVersions.jpg)
+![File versions](https://github.com/Ismailtnt/satellites-web-application/tree/master/assets/fileVersions.jpg)
 
 ## 👨‍💻 Author
 
